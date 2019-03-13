@@ -12,12 +12,13 @@
     
     
     <item>
-      <title>Angel Guarisma</title>
+      <title>How to Install Turtl on Linux</title>
       <link>https://guaris.github.io/portfolio/portfolio/</link>
       <pubDate>Tue, 01 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>https://guaris.github.io/portfolio/portfolio/</guid>
-      <description></description>
+      <description>What is Turtl? Turtl is an open-source alternative to cloud-based storage services. With a focus on privacy, Turtl offers a place to store and access your passwords, bookmarks and pictures. Hosting your own Turtl server on a secure Linode allows you to monitor your own security.
+The Turtl server is written in Common Lisp, and the low-level encryption is derived from the Stanford JavaScript Crypto Library. If encryption is important to you, read over the encryption specifics section of the official documentation</description>
     </item>
     
   </channel>

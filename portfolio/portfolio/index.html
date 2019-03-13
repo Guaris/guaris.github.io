@@ -10,11 +10,13 @@
     <meta name="keywords" content="blog,technical writer,portfolio">
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Angel Guarisma"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:title" content="How to Install Turtl on Linux"/>
+<meta name="twitter:description" content="What is Turtl? Turtl is an open-source alternative to cloud-based storage services. With a focus on privacy, Turtl offers a place to store and access your passwords, bookmarks and pictures. Hosting your own Turtl server on a secure Linode allows you to monitor your own security.
+The Turtl server is written in Common Lisp, and the low-level encryption is derived from the Stanford JavaScript Crypto Library. If encryption is important to you, read over the encryption specifics section of the official documentation"/>
 
-    <meta property="og:title" content="Angel Guarisma" />
-<meta property="og:description" content="" />
+    <meta property="og:title" content="How to Install Turtl on Linux" />
+<meta property="og:description" content="What is Turtl? Turtl is an open-source alternative to cloud-based storage services. With a focus on privacy, Turtl offers a place to store and access your passwords, bookmarks and pictures. Hosting your own Turtl server on a secure Linode allows you to monitor your own security.
+The Turtl server is written in Common Lisp, and the low-level encryption is derived from the Stanford JavaScript Crypto Library. If encryption is important to you, read over the encryption specifics section of the official documentation" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://guaris.github.io/portfolio/portfolio/" />
 <meta property="article:published_time" content="2019-01-01T00:00:00&#43;00:00"/>
@@ -23,7 +25,7 @@
 
     <base href="https://guaris.github.io/portfolio/portfolio/">
     <title>
-  Angel Guarisma · 
+  How to Install Turtl on Linux · 
 </title>
 
     <link rel="canonical" href="https://guaris.github.io/portfolio/portfolio/">
@@ -69,10 +71,6 @@
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="https://guaris.github.io/about/">About</a>
-          </li>
-        
-          <li class="navigation-item">
             <a class="navigation-link" href="https://guaris.github.io/">Home</a>
           </li>
         
@@ -88,10 +86,86 @@
   <section class="container page">
   <article>
     <header>
-      <h1>Angel Guarisma</h1>
+      <h1>How to Install Turtl on Linux</h1>
     </header>
 
     
+
+<h1 id="what-is-turtl">What is Turtl?</h1>
+
+<p>Turtl is an open-source alternative to cloud-based storage services. With a focus on privacy, Turtl offers a place to store and access your passwords, bookmarks and pictures. Hosting your own Turtl server on a secure Linode allows you to monitor your own security.</p>
+
+<p>The Turtl server is written in Common Lisp, and the low-level encryption is derived from the Stanford JavaScript Crypto Library. If encryption is important to you, read over the encryption specifics section of the <a href="https://turtlapp.com/docs/security/encryption-specifics/">official documentation</a></p>
+
+<h2 id="install-dependencies">Install Dependencies:</h2>
+
+<p>The Turtl server has to be built from source. Download all of the dependencies as well as git:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">apt install wget curl libtool subversion make automake git</pre></div>
+<h3 id="libuv-rethinkdb-clozure-common-lisp-quicklisp">Libuv, RethinkDB, Clozure Common Lisp, QuickLisp:</h3>
+
+<h4 id="libuv">Libuv</h4>
+
+<p>Download the Libuv package from the official repository:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">wget https://dist.libuv.org/dist/v1.13.0/libuv-v1.13.0.tar.gz
+tar -xvf libuv-v1.13.0.tar.gz</pre></div>
+<p>Build the package from source:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cd libuv-v1.13.0
+sudo sh autogen.sh
+sudo ./configure
+sudo make
+sudo make install</pre></div>
+<p>After the package is built, run <code>sudo ldconfig</code> to maintain the shared libracy cache.</p>
+
+<h4 id="rethinkdb">RethinkDB</h4>
+
+<p><a href="https://rethinkdb.com/faq/">RethinkDB</a> is a flexible JSON database. According to the Turtl <a href="https://turtlapp.com/docs/server/">documentation</a>, RethinkDB just needs to be installed; Turtl will take care of the rest.</p>
+
+<p>RehinkDB has community-maintained packages on most distributions. On Ubuntu, you have to add the RethinkDB to your list of repositories:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">source /etc/lsb-release &amp;&amp; echo &#34;deb http://download.rethinkdb.com/apt $xenial main&#34; | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -</pre></div>
+<p>Navigate to your <code>sources.list</code> folder and add your version of Ubuntu:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">vi /etc/apt/sources.list.d/rethinkdb.list
+deb http://download.rethinkdb.com/apt xenial main</pre></div>
+<p>Update apt and install RethinkDB:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> sudo apt update
+ sudo apt install rethinkdb</pre></div>
+<p>Navigate to <code>/etc/rethinkdb/</code> and rename <code>default.conf.sample</code> to <code>default.conf</code></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo mv /etc/rethinkdb/default.conf.sample /etc/rethinkdb/default.conf</pre></div>
+<p>Restart the <code>rethinkdb.service</code> daemon:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo systemctl restart rethinkdb.service</pre></div>
+<h3 id="install-turtl">Install Turtl</h3>
+
+<p>Clone Turtl from the Github repository:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git clone https://github.com/turtl/api.git</pre></div>
+<p>Create a file called <code>launch.lisp</code> inside <code>/api</code> and copy the commands below:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">touch launch.lisp
+vi launch.lisp
+
+(pushnew &#34;./&#34; asdf:*central-registry* :test #&#39;equal)
+(load &#34;start&#34;)</pre></div>
+<p>Turtl does not ship with all of its dependencies. Instead, the Turtl community provides a list of dependencies. Clone these into <code>/home/turtl/quicklisp/local-projects</code>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">echo &#34;https://github.com/orthecreedence/cl-hash-util https://github.com/orthecreedence/cl-async https://github.com/orthecreedence/cffi https://github.com/orthecreedence/wookie https://github.com/orthecreedence/cl-rethinkdb https://github.com/orthecreedence/cl-libuv https://github.com/orthecreedence/drakma-async https://github.com/Inaimathi/cl-cwd.git&#34; &gt; dependencies.txt
+
+for repo in `cat dependencies.txt`; do `git clone $repo`; done</pre></div>
+<p>Edit the <code>/home/turtl/.ccl-init.lisp</code> to include:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">(cwd &#34;/home/turtl/api&#34;)
+(load &#34;/home/turtl/api/launch&#34;)</pre></div>
+<p>The first line tells Lisp to use the <code>cl-cwd</code> package that you cloned to change the current working directory to <code>/home/turtl/api</code>. You can change this to anything, but your naming conventions should be consistent. The second line loads your <code>launch.lisp</code>, loading <code>asdf</code> so that Turtl can run.</p>
+
+<p>Create the default Turtl configuration file:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cp /home/turtl/api/config/config.default.lisp /home/turtl/api/config/config.lisp</pre></div>
+<p>The <code>config.lisp</code> file is where the configurations for your server are stored. If you want to connect to your Linode from a Turtl desktop or mobile client, you need to add the Linode&rsquo;s public IP address to:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">(defvar *site-url* &#34;http://1.0.0.0:8181&#34;
+   &#34;The main URL the site will load from.&#34;)</pre></div>
+<p>Go to your home directory and run <code>ccl64</code>. This will automatically start the Turtl server.</p>
+
+<p>You now have a functioning Turtl server. Add files, store passwords, and save bookmarks in your own private Turtl instance.</p>
+
+<hr />
+
+<p>This tutorial was originally published here:
+<a href="https://www.linode.com/docs/applications/cloud-storage/how-to-install-a-turtl-server-on-ubuntu/">https://www.linode.com/docs/applications/cloud-storage/how-to-install-a-turtl-server-on-ubuntu/</a></p>
+
   </article>
 </section>
 
