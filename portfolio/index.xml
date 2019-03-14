@@ -12,13 +12,43 @@
     
     
     <item>
-      <title>How to Install Turtl on Linux</title>
-      <link>https://guaris.github.io/portfolio/portfolio/</link>
-      <pubDate>Tue, 01 Jan 2019 00:00:00 +0000</pubDate>
+      <title>Introduction to SELinux</title>
+      <link>https://guaris.github.io/portfolio/selinux/</link>
+      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://guaris.github.io/portfolio/portfolio/</guid>
-      <description>What is Turtl? Turtl is an open-source alternative to cloud-based storage services. With a focus on privacy, Turtl offers a place to store and access your passwords, bookmarks and pictures. Hosting your own Turtl server on a secure Linode allows you to monitor your own security.
+      <guid>https://guaris.github.io/portfolio/selinux/</guid>
+      <description>SELinux is a Mandatory Access Control (MAC) system, developed by the NSA. SELinux was developed as a replacement for Discretionary Access Control (DAC) that ships with most Linux distributions.
+The difference between Discretionary Access Controls and Mandatory Access Controls is the means by which users and applications gain access to machines. Traditionally, the command sudo gives a user the ability to heighten permissions to root-level. Root access on a DAC system gives the person or program with root access permission to perform as desired on a machine.</description>
+    </item>
+    
+    <item>
+      <title>Troubleshooting Postfix Issues</title>
+      <link>https://guaris.github.io/portfolio/troubleshooting-postfix/</link>
+      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://guaris.github.io/portfolio/troubleshooting-postfix/</guid>
+      <description>Because setting up a mail server is tricky, we&amp;rsquo;ve created this companion troubleshooting guide to help you work through and resolve any problems you might be experiencing. By the time you reach the end of this guide, you&amp;rsquo;ll know how to debug problems with your Postfix, Dovecot, and MySQL mail server.
+The first section, Troubleshooting Checklist, has a top-down approach to troubleshooting that will help you find specific errors for your mail server.</description>
+    </item>
+    
+    <item>
+      <title>How to Install Turtl on Linux</title>
+      <link>https://guaris.github.io/portfolio/turtl/</link>
+      <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://guaris.github.io/portfolio/turtl/</guid>
+      <description>What is Turtl? Turtl is an open-source alternative to cloud-based storage services. With a focus on privacy, Turtl offers a place to store and access your passwords, bookmarks and pictures. Hosting your own Turtl server on a secure server allows you to monitor your own security.
 The Turtl server is written in Common Lisp, and the low-level encryption is derived from the Stanford JavaScript Crypto Library. If encryption is important to you, read over the encryption specifics section of the official documentation</description>
+    </item>
+    
+    <item>
+      <title>Installing Redmine</title>
+      <link>https://guaris.github.io/portfolio/redmine/</link>
+      <pubDate>Sat, 03 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://guaris.github.io/portfolio/redmine/</guid>
+      <description>What is Redmine? Redmine is a project management web app that allows users to manage projects flexibly while offering robust tracking tools and an extensive library of plug-ins. This free and open source solution offers an alternative to paid project management tools and includes support for wikis, forums, calendars, and data visualization tools.
+This guide will show you how to install and set up Redmine on Ubuntu 16.04 through the Passenger application server connected to NGINX.</description>
     </item>
     
   </channel>

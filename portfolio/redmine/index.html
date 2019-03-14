@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Angel Guarisma">
+    <meta name="description" content="Angel Guarisma&#39;s Portfolio">
+    <meta name="keywords" content="blog,technical writer,portfolio">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Installing Redmine"/>
+<meta name="twitter:description" content="What is Redmine? Redmine is a project management web app that allows users to manage projects flexibly while offering robust tracking tools and an extensive library of plug-ins. This free and open source solution offers an alternative to paid project management tools and includes support for wikis, forums, calendars, and data visualization tools.
+This guide will show you how to install and set up Redmine on Ubuntu 16.04 through the Passenger application server connected to NGINX."/>
+
+    <meta property="og:title" content="Installing Redmine" />
+<meta property="og:description" content="What is Redmine? Redmine is a project management web app that allows users to manage projects flexibly while offering robust tracking tools and an extensive library of plug-ins. This free and open source solution offers an alternative to paid project management tools and includes support for wikis, forums, calendars, and data visualization tools.
+This guide will show you how to install and set up Redmine on Ubuntu 16.04 through the Passenger application server connected to NGINX." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guaris.github.io/portfolio/redmine/" />
+<meta property="article:published_time" content="2018-03-03T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-03-03T00:00:00&#43;00:00"/>
+
+
+    <base href="https://guaris.github.io/portfolio/redmine/">
+    <title>
+  Installing Redmine · 
+</title>
+
+    <link rel="canonical" href="https://guaris.github.io/portfolio/redmine/">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://guaris.github.io/css/coder.min.8881182b3ec36ffd9c735306f7e16ce9b1129ebc650e069e7c4114827e9d9b23.css" integrity="sha256-iIEYKz7Db/2cc1MG9&#43;Fs6bESnrxlDgaefEEUgn6dmyM=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="https://guaris.github.io/css/custom.css">
+    
+
+    <link rel="icon" type="image/png" href="https://guaris.github.io/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://guaris.github.io/img/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.54.0" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://guaris.github.io/">
+      
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://guaris.github.io/portfolio/">Portfolio</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://guaris.github.io/">Home</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1>Installing Redmine</h1>
+    </header>
+
+    
+
+<h2 id="what-is-redmine">What is Redmine?</h2>
+
+<p>Redmine is a project management web app that allows users to manage projects flexibly while offering robust tracking tools and an extensive library of plug-ins. This free and open source solution offers an alternative to paid project management tools and includes support for wikis, forums, calendars, and data visualization tools.</p>
+
+<p>This guide will show you how to install and set up Redmine on Ubuntu 16.04 through the Passenger application server connected to NGINX.</p>
+
+<h2 id="install-dependencies">Install Dependencies</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo apt install build-essential mysql-server ruby ruby-dev libmysqlclient-dev imagemagick libmagickwand-dev</pre></div>
+<h2 id="configure-mysql">Configure MySQL</h2>
+
+<p>MySQL needs to be configured so that Redmine can store data. You can log in to the root account of your database using the password that you set when you installed <code>mysql-server</code>.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> mysql -u root -p</pre></div>
+<ol>
+<li><p>After logging in, create a new database and database user:</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="font-weight:bold">CREATE</span> <span style="font-weight:bold">DATABASE</span> redmine;
+<span style="font-weight:bold">CREATE</span> <span style="font-weight:bold">USER</span> <span style="font-style:italic">&#39;redmine&#39;</span>@<span style="font-style:italic">&#39;localhost&#39;</span> IDENTIFIED <span style="font-weight:bold">BY</span> <span style="font-style:italic">&#39;password&#39;</span>;
+<span style="font-weight:bold">GRANT</span> <span style="font-weight:bold">ALL</span> <span style="font-weight:bold">PRIVILEGES</span> <span style="font-weight:bold">ON</span> redmine.* <span style="font-weight:bold">TO</span> <span style="font-style:italic">&#39;redmine&#39;</span>@<span style="font-style:italic">&#39;localhost&#39;</span>;
+FLUSH <span style="font-weight:bold">PRIVILEGES</span>;
+quit;</code></pre></div></li>
+</ol>
+
+<h3 id="install-ruby">Install Ruby</h3>
+
+<p>Redmine requires Ruby to run. Use the Ruby Version Manager (RVM) to install Ruby 2.2.3.</p>
+
+<ol>
+<li><p>Curl the latest version of RVM.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+curl -sSL https://get.rvm.io | bash -s stable
+source ~/.rvm/scripts/rvm</pre></div>
+<!---
+        sudo apt-add-repository -y ppa:rael-gc/rvm
+        sudo apt-get update
+        sudo apt-get install rvm
+--></li>
+
+<li><p>Users of RVM must be in the <code>rvm</code> group. Create this group, add a user, log out, and log back in:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo groupadd rvm
+sudo usermod -a -G rvm username
+exit</pre></div></li>
+
+<li><p>Check the requirements for the install, and install Ruby (version 2.2.3):</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">rvm requirements
+rvm install 2.2.3
+rvm use 2.2.3 --default</pre></div></li>
+</ol>
+
+<h3 id="install-passenger-and-nginx">Install Passenger and NGINX</h3>
+
+<p><a href="https://github.com/phusion/passenger">Passenger</a> is an application server that runs your web application then communicates with the web server. The project has well-written <a href="https://www.phusionpassenger.com/library/install/nginx/install/oss/xenial/">documentation</a> on installing Passenger and NGINX on Ubuntu 16.04 with an apt repository.</p>
+
+<ol>
+<li><p>Install the Passenger PGP key and HTTPS support for the package manager:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo apt install -y dirmngr gnupg
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+sudo apt install -y apt-transport-https ca-certificates</pre></div></li>
+
+<li><p>Add the Passenger APT repository:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo sh -c &#39;echo deb https://oss-binaries.phusionpassenger.com/apt/passenger xenial main &gt; /etc/apt/sources.list.d/passenger.list&#39;
+sudo apt update</pre></div></li>
+
+<li><p>Install Passenger and NGINX</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo apt install -y nginx-extras passenger</pre></div></li>
+</ol>
+
+<h3 id="configure-nginx">Configure NGINX</h3>
+
+<p>Passenger has now installed NGINX with Passenger compiled in. You have to configure NGINX to make sure it uses Passenger correctly:</p>
+
+<ol>
+<li><p>Uncomment the <code>include /etc/nginx/passenger.conf;</code> line in <code>/etc/nginx/nginx.conf</code>. Edit your config file to resemble the one below:</p>
+
+##
+# Phusion Passenger config
+##
+# Uncomment it if you installed passenger or passenger-enterprise
+##
+
+include /etc/nginx/passenger.conf;
+
+##
+# Virtual Host Configs
+##
+
+include /etc/nginx/conf.d/*.conf;</li>
+
+<li><p>Copy the default nginx site configuration file. The working configuration file in this guide will be <code>/etc/nginx/sites-available/default</code>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.orig</pre></div></li>
+
+<li><p>Change the <code>root</code> directory for the website, and add additional Passenger configurations. To do this, add these lines to the <code>server{}</code> block of the file:</p>
+
+root /data/redmine/redmine/public;
+passenger_enabled on;
+client_max_body_size 10m;</li>
+
+<li><p>In the same file, comment out the <code>#location</code> section:</p>
+
+#location / {
+# First attempt to serve request as file, then
+# as directory, then fall back to displaying a 404.
+    #try_files $uri $uri/ =404;
+#}</li>
+
+<li><p>Change the permissions for <code>/var/www</code>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo mkdir /var/www
+sudo chown -R www-data /var/www</pre></div></li>
+
+<li><p>Restart <code>nginx</code>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo systemctl restart nginx</pre></div></li>
+
+<li><p>Validate the installation of Passenger and NGINX:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo /usr/bin/passenger-config validate-install</pre></div>
+<p>Press <strong>enter</strong> when the first option is selected:</p>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-aconf" data-lang="aconf"> If the menu doesn&#39;t display correctly, press &#39;!&#39;
+
+<span style="">‣</span> <span style="">⬢</span>  Passenger itself
+  <span style="">⬡</span>  Apache
+
+  -------------------------------------------------------------------------
+
+<span style="">*</span> Checking whether this Passenger install is in PATH... ✓
+<span style="">*</span> Checking whether there are no other Passenger installations... ✓
+Everything looks good. :-()</code></pre></div></li>
+
+<li><p>Finally, check if NGINX has started the Passenger core process:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo /usr/sbin/passenger-memory-stats</pre></div>
+<p>If Passenger was installed with NGINX correctly, your output should resemble:</p></li>
+</ol>
+
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-aconf" data-lang="aconf"><span style="">---------</span> NGINX processes ----------
+PID   PPID  VMSize    Private  Name
+<span style="">------------------------------------</span>
+<span style="">6399</span>  <span style="">1</span>     <span style="">174</span>.<span style="">9</span> MB  0.6 MB   nginx: master process <span style="font-style:italic">/usr/sbin/nginx</span> -g daemon <span style="font-weight:bold">on</span>; master_process <span style="font-weight:bold">on</span>;
+<span style="">6404</span>  <span style="">6399</span>  <span style="">174</span>.<span style="">9</span> MB  0.7 MB   nginx: worker process
+<span style="font-style:italic">### Processes: 2</span>
+<span style="font-style:italic">### Total private dirty RSS: 1.23 MB</span>
+
+
+<span style="">----</span> Passenger processes -----
+PID   VMSize    Private  Name
+<span style="">------------------------------</span>
+<span style="">6379</span>  <span style="">441</span>.<span style="">3</span> MB  1.2 MB   Passenger watchdog
+<span style="">6382</span>  <span style="">660</span>.<span style="">4</span> MB  2.9 MB   Passenger core
+<span style="">6388</span>  <span style="">449</span>.<span style="">5</span> MB  1.4 MB   Passenger ust-router
+<span style="font-style:italic">### Processes: 3</span></code></pre></div>
+
+<h3 id="install-redmine">Install Redmine</h3>
+
+<ol>
+<li><p>Create a <code>redmine</code> user and add the new user to the <code>sudo</code> group:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo adduser --system --shell /bin/bash --gecos &#39;Redmine Administrator&#39; --group --home /data/redmine redmine; sudo usermod -a -G rvm redmine
+sudo adduser redmine sudo</pre></div></li>
+
+<li><p>Log in as the <code>redmine</code> user:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">su -
+passwd redmine
+su redmine
+cd</pre></div></li>
+
+<li><p>Download the Redmine tarball as the new user. Extract it and rename the directory to <code>redmine</code> for convenience:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">wget https://www.redmine.org/releases/redmine-3.4.4.tar.gz
+tar -zxvf redmine-3.4.4.tar.gz
+mv redmine-3.4.4 redmine</pre></div></li>
+
+<li><p>Add the database information created earlier to Redmine&rsquo;s config file. Only complete the section marked &ldquo;Production,&rdquo; as you will not be using the development or test environments.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cd redmine
+cp -pR config/database.yml.example config/database.yml
+emacs config/database.yml</pre></div></li>
+
+<li><p>In the <code>redmine</code> directory, install the Ruby dependencies:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo gem install bundler
+sudo bundle install --without development test</pre></div></li>
+
+<li><p>After the installation finishes, you need to use Rake to start the server:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">bundle exec rake generate_secret_token
+RAILS_ENV=production bundle exec rake db:migrate
+RAILS_ENV=production bundle exec rake redmine:load_default_data</pre></div></li>
+
+<li><p>Restart NGINX, and navigate to your server&rsquo;s IP address and you will be greeted by the Redmine application:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo systemctl restart nginx</pre></div></li>
+</ol>
+
+<h2 id="redmine">Redmine</h2>
+
+<p>The default login and password for Redmine are:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> Login: admin
+ Password: admin</pre></div>
+<p>After logging in for the first time, you will be prompted to change your credentials. Replace them with something secure.</p>
+
+<h4 id="install-a-plug-in">Install a Plug-in</h4>
+
+<p>Redmine is built to be used with plug-ins. Plug-ins are installed to <code>redmine/plugins</code>. This section will demonstrate installing a plug-in by installing <a href="https://github.com/scrum2b/scrum2b">scrum2b</a>, a plug-in for managing a Scrum/Agile workflow.</p>
+
+<p>If not installed, install git or download the plug-in directly through the Github website:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo apt install git</pre></div>
+<ol>
+<li><p>Move to <code>redmine/plugins</code> and clone the plug-in:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cd plugins
+git clone https://github.com/scrum2b/scrum2b</pre></div></li>
+
+<li><p>Use Bundle to install the plug-in, then restart NGINX:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">bundle install
+sudo systemctl restart nginx</pre></div></li>
+
+<li><p>Navigate to Redmine in your browser. Log in, click <strong>admin</strong> then click <strong>plugins</strong></p></li>
+</ol>
+
+  </article>
+</section>
+
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+      <p>Are you sleeping enough?</p>
+    
+     © 2019
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>
