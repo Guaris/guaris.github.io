@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Angel Guarisma">
+    <meta name="description" content="Angel Guarisma&#39;s Portfolio">
+    <meta name="keywords" content="blog,technical writer,portfolio">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Installing MAAS and Configuring DHCP"/>
+<meta name="twitter:description" content="MAAS is a tool for provisioning baremetal servers in the cloud. The newest release of MAAS, 2.6.0, introduces a new way to configure DHCP. This tutorial will walk you through installing MAAS on Ubuntu 18.04, and configuring DHCP through the web interface.
+Installing MAAS Configuring Ubuntu   Update your system
+ sudo apt update &amp;&amp; sudo apt upgrade    Create a user, add the user to the sudo group, log in to the newly created user:"/>
+
+    <meta property="og:title" content="Installing MAAS and Configuring DHCP" />
+<meta property="og:description" content="MAAS is a tool for provisioning baremetal servers in the cloud. The newest release of MAAS, 2.6.0, introduces a new way to configure DHCP. This tutorial will walk you through installing MAAS on Ubuntu 18.04, and configuring DHCP through the web interface.
+Installing MAAS Configuring Ubuntu   Update your system
+ sudo apt update &amp;&amp; sudo apt upgrade    Create a user, add the user to the sudo group, log in to the newly created user:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guaris.github.io/portfolio/mass-dchp/" />
+<meta property="article:published_time" content="2019-04-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-04-06T00:00:00+00:00" />
+
+
+    <base href="https://guaris.github.io/portfolio/mass-dchp/">
+    <title>
+  Installing MAAS and Configuring DHCP · 
+</title>
+
+    <link rel="canonical" href="https://guaris.github.io/portfolio/mass-dchp/">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://guaris.github.io/css/coder.min.8881182b3ec36ffd9c735306f7e16ce9b1129ebc650e069e7c4114827e9d9b23.css" integrity="sha256-iIEYKz7Db/2cc1MG9&#43;Fs6bESnrxlDgaefEEUgn6dmyM=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="https://guaris.github.io/css/custom.css">
+    
+
+    <link rel="icon" type="image/png" href="https://guaris.github.io/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://guaris.github.io/img/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.68.1" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://guaris.github.io/">
+      
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://guaris.github.io/portfolio/">Portfolio</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://guaris.github.io/">Home</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1>Installing MAAS and Configuring DHCP</h1>
+    </header>
+
+    <figure>
+    <img src="https://guaris.github.io/portfolio/static/maas.png" height="300"/> 
+</figure>
+
+<p>MAAS is a tool for provisioning baremetal servers in the cloud. The newest release of MAAS, 2.6.0, introduces a new way to configure DHCP. This tutorial will walk you through installing MAAS on Ubuntu 18.04, and configuring DHCP through the web interface.</p>
+<h2 id="installing-maas">Installing MAAS</h2>
+<h3 id="configuring-ubuntu">Configuring Ubuntu</h3>
+<ol>
+<li>
+<p>Update your system</p>
+<pre><code> sudo apt update &amp;&amp; sudo apt upgrade
+</code></pre>
+</li>
+<li>
+<p>Create a user, add the user to the <code>sudo</code> group, log in to the newly created user:</p>
+<pre><code> sudo adduser user 
+ sudo adduser user sudo
+ su user
+</code></pre>
+</li>
+</ol>
+<h3 id="installing-maas-1">Installing MAAS</h3>
+<ol>
+<li>
+<p>Install version 2.6.0 of MAAS, by adding the <code>maas/next</code> ppa:</p>
+<pre><code> sudo apt-add-repository ppa:maas/next
+</code></pre>
+</li>
+<li>
+<p>After adding the PPA, press <code>ENTER</code> after reading the following prompt:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback"> This PPA holds new upstream development releases, usually development releases. Currently, it is holding the 2.5 series.
+ More info: https://launchpad.net/~maas/+archive/ubuntu/next
+Press [ENTER] to continue or Ctrl-c to cancel adding it.</code></pre></div>
+</li>
+<li>
+<p>Update the package list:</p>
+<pre><code> sudo apt update
+</code></pre>
+</li>
+<li>
+<p>Install MAAS 2.6.0:</p>
+<pre><code> sudo apt install maas
+</code></pre>
+</li>
+<li>
+<p>Initialize MAAS:</p>
+<pre><code> sudo maas init
+</code></pre>
+</li>
+<li>
+<p>Follow the prompt to create an admin user:</p>
+<pre><code> Create first admin account
+ Username: maas-admin
+ Password:
+ Again:
+ Email: angel@staghunt.org
+ Import SSH keys [] (lp:user-id or gh:user-id):
+</code></pre>
+</li>
+</ol>
+<h3 id="start-the-maas-server">Start the MAAS server</h3>
+<p>If MAAS was successfully installed, the web interface will be available at: <code>http://&lt;IPADDRESS&gt;:5240</code></p>
+<ol>
+<li>Navigate to the MAAS web interface in your browser, you will be greeted by this screen:</li>
+</ol>
+<p><img src="https://guaris.github.io/portfolio/static/loginscreen.png" alt="loginscreen"></p>
+<pre><code>Enter the username and password you created in Step 6, of the Installing MAAS section. 
+</code></pre>
+<ol start="2">
+<li>Verify that all of the information is correct in both of the following screens:</li>
+</ol>
+<p><img src="https://guaris.github.io/portfolio/static/screen2.png" alt="Screen2">
+<img src="https://guaris.github.io/portfolio/static/screen3.png" alt="screen3"></p>
+<ol start="3">
+<li>
+<p>Add an SSH key to your account. If you use Launchpad, you can import your key using your Launchpad username. If you need to create an SSH key, run the following command, in the terminal:</p>
+<pre><code> ssh-keygen -t rsa
+</code></pre>
+<p>Follow the prompts, your SSH key will be saved at <code>/home/user/.ssh/id_rsa.pub</code>.</p>
+</li>
+<li>
+<p>Use the <code>cat</code> command to display the key in the terminal. Using your mouse manually copy the key and paste it into the MAAS interface.</p>
+<pre><code> cat /home/user/.ssh/id_rsa.pub
+</code></pre>
+</li>
+<li>
+<p>Click the <strong>Import</strong> button, and after confirming that the interface looks like this:</p>
+</li>
+</ol>
+<p><img src="https://guaris.github.io/portfolio/static/ssh-key.png" alt="ssh-key"></p>
+<p>Press the <strong>Return to Dashboard</strong> button.</p>
+<h2 id="configuring-dhcp">Configuring DHCP</h2>
+
+  </article>
+</section>
+
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+      <p>Angel Guarisma Portfolio</p>
+    
+     © 2020
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>

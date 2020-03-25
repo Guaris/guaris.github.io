@@ -19,8 +19,8 @@ The difference between Discretionary Access Controls and Mandatory Access Contro
 The difference between Discretionary Access Controls and Mandatory Access Controls is the means by which users and applications gain access to machines. Traditionally, the command sudo gives a user the ability to heighten permissions to root-level. Root access on a DAC system gives the person or program with root access permission to perform as desired on a machine." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://guaris.github.io/portfolio/selinux/" />
-<meta property="article:published_time" content="2019-03-10T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2019-03-10T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2019-03-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-03-10T00:00:00+00:00" />
 
 
     <base href="https://guaris.github.io/portfolio/selinux/">
@@ -51,7 +51,7 @@ The difference between Discretionary Access Controls and Mandatory Access Contro
     <link rel="icon" type="image/png" href="https://guaris.github.io/img/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://guaris.github.io/img/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.54.0" />
+    <meta name="generator" content="Hugo 0.68.1" />
   </head>
 
   <body class=" ">
@@ -89,45 +89,38 @@ The difference between Discretionary Access Controls and Mandatory Access Contro
       <h1>Introduction to SELinux</h1>
     </header>
 
-    
-
-<p>SELinux is a Mandatory Access Control (MAC) system, developed by the NSA. SELinux was developed as a replacement for Discretionary Access Control (DAC) that ships with most Linux distributions.</p>
-
+    <p>SELinux is a Mandatory Access Control (MAC) system, developed by the NSA. SELinux was developed as a replacement for Discretionary Access Control (DAC) that ships with most Linux distributions.</p>
 <p>The difference between Discretionary Access Controls and Mandatory Access Controls is the means by which users and applications gain access to machines. Traditionally, the command <code>sudo</code> gives a user the ability to heighten permissions to <code>root</code>-level. Root access on a DAC system gives the person or program with root access permission to perform as desired on a machine.</p>
-
 <p>Ideally, the person with root access should be trusted with it. But if security has been compromised, so too has the system. SELinux and MACs resolve this issue by both confining privileged processes and automating security policy creation.</p>
-
 <p>SELinux defaults to denying anything that is not explicitly allowed. SELinux has global modes, <code>permissive</code> and <code>enforcing</code>. <code>Permissive</code> mode allows the system to function like a Discretionary Access Control system, while logging every violation to SELinux. The <code>enforcing</code> mode enforces a strict denial of access to anything that isn&rsquo;t explicitly allowed. To explicitly allow certain behavior on a machine, you, as the system administrator, have to write policies that allow it.</p>
-
 <h2 id="install-selinux">Install SELinux</h2>
-
 <p>On CentOS 7 most of the SELinux packages are installed by default. Look to see what packages are installed:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">rpm -aq | grep selinux</pre></div>
+<pre><code>rpm -aq | grep selinux
+</code></pre>
 <p>If you are dealing with a freshly installed CentOS 7, your output should be:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~]# rpm -aq | grep selinux
+<pre><code>[root@centos ~]# rpm -aq | grep selinux
 libselinux-utils-2.5-6.el7.x86_64
 libselinux-2.5-6.el7.x86_64
 libselinux-python-2.5-6.el7.x86_64
 selinux-policy-3.13.1-102.el7_3.16.noarch
-selinux-policy-targeted-3.13.1-102.el7_3.16.noarch</pre></div>
+selinux-policy-targeted-3.13.1-102.el7_3.16.noarch
+</code></pre>
 <p>Install the following packages and their associated dependencies:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">yum install policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted libselinux-utils setools setools-console</pre></div>
+<pre><code>yum install policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted libselinux-utils setools setools-console
+</code></pre>
 <p>Optionally, install <code>setroubleshoot-server</code> and <code>mctrans</code>. The <code>setroubleshoot-server</code> allows, among many other things, for email notifications to be sent from the server to notify you of any policy violations. The <code>mctrans</code> daemon translates the output of SELinux to human readable text.</p>
-
 <h3 id="selinux-modes">SELinux Modes</h3>
-
 <p>SELinux has two modes: <code>Enforcing</code> and  <code>Permissive</code>:</p>
-
 <ul>
 <li><code>Enforcing</code>: In <code>Enforcing</code> mode, SELinux enforces strict policies on the system. Things that are not allowed, will not be allowed to run under any circumstance.</li>
 <li><code>Permissive</code>: In <code>Permissive</code> mode, your system is <strong>not</strong> protected by SELinux; instead, SELinux just records any violation to a log file.</li>
 </ul>
-
 <p>You can check what mode your system is in by running the <code>getenforce</code> command:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~ ]# getenforce
-Enforcing</pre></div>
+<pre><code>[root@centos ~ ]# getenforce
+Enforcing
+</code></pre>
 <p>You can also retrieve even more information using <code>sestatus</code>:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~]# sestatus
+<pre><code>[root@centos ~]# sestatus
 SELinux status:                 enabled
 SELinuxfs mount:                /sys/fs/selinux
 SELinux root directory:         /etc/selinux
@@ -136,16 +129,19 @@ Current mode:                   enforcing
 Mode from config file:          permissive
 Policy MLS status:              enabled
 Policy deny_unknown status:     allowed
-Max kernel policy version:      28</pre></div>
+Max kernel policy version:      28
+</code></pre>
 <p>You have to set SELinux to <code>permissive</code>, so that you can create policies on your system for SELinux to enforce. After changing SELinux&rsquo;s mode, you have to reboot your system.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~]# setenforce 0
+<pre><code>[root@centos ~]# setenforce 0
 [root@centos ~]# getenforce
 Permissive
-[root@centos ~]# reboot</pre></div>
+[root@centos ~]# reboot
+</code></pre>
 <p>Now that SELinux is set to <code>Permissive</code>, you can see the log of privacy violations by using:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">grep &#34;selinux&#34; /var/log/messages</pre></div>
+<pre><code>grep &quot;selinux&quot; /var/log/messages
+</code></pre>
 <p>The output will look very similar to this:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~]# grep &#34;selinux&#34; /var/log/messages
+<pre><code>[root@centos ~]# grep &quot;selinux&quot; /var/log/messages
 Jun 26 12:27:16 li482-93 yum[4572]: Updated: selinux-policy-3.13.1-102.el7_3.16.noarch
 Jun 26 12:27:38 li482-93 yum[4572]: Updated: selinux-policy-targeted-3.13.1-102.el7_3.16.noarch
 Jun 26 16:38:15 li482-93 systemd: Removed slice system-selinux\x2dpolicy\x2dmigrate\x2dlocal\x2dchanges.slice.
@@ -154,9 +150,10 @@ Jun 26 16:54:46 li482-93 systemd: Removed slice system-selinux\x2dpolicy\x2dmigr
 Jun 26 16:54:46 li482-93 systemd: Stopping system-selinux\x2dpolicy\x2dmigrate\x2dlocal\x2dchanges.slice.
 Jun 26 16:55:45 li482-93 kernel: EVM: security.selinux
 Jun 26 17:33:43 li482-93 kernel: EVM: security.selinux
-Jun 26 17:36:21 li482-93 kernel: EVM: security.selinux</pre></div>
+Jun 26 17:36:21 li482-93 kernel: EVM: security.selinux
+</code></pre>
 <p>The file that contains the security states of the system is located at <code>/etc/selinux/config</code>, you can edit that file to change the state of the system.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">vi /etc/selinux/config
+<pre><code>vi /etc/selinux/config
 # This file controls the state of SELinux on the system.
 # SELINUX= can take one of these three values:
 #     enforcing - SELinux security policy is enforced.
@@ -167,47 +164,46 @@ SELINUX=permissive
 #     targeted - Targeted processes are protected,
 #     minimum - Modification of targeted policy. Only selected processes are protected.
 #     mls - Multi Level Security protection.
-SELINUXTYPE=targeted</pre></div>
+SELINUXTYPE=targeted
+</code></pre>
 <p>The uncommented lines can be changed to any state. After changing the state of SELinux, <code>reboot</code> the machine for the changes to take effect.</p>
-
 <h3 id="selinux-context">SELinux Context</h3>
-
 <p>Before switching to the <code>enforce</code> state in SELinux, you have to understand contexts, as they pertain to SELinux.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~]# useradd user
+<pre><code>[root@centos ~]# useradd user
 [root@centos ~]# su user
 [user@centos ~]$ cd ~/ &amp;&amp; mkdir test
 [user@centos ~]$ ls -Z
-drwxrwxr-x. user user unconfined_u:object_r:user_home_t:s0 test</pre></div>
+drwxrwxr-x. user user unconfined_u:object_r:user_home_t:s0 test
+</code></pre>
 <p>The output of <code>ls -Z</code> may look familiar, but the <code>-Z</code> context flag prints out the SELinux security context of any file.</p>
-
 <p>SELinux marks every single object on a machine with a <em>context</em>. That means every file, daemon, and process has a context, according to SELinux. The context is broken into three parts: user, role and type. In SELinux, a policy controls which users can get which roles. Each specific role places a constraint on what <code>type</code> of files that user can enter. When a user logs in to a system, a role is assigned, which can be seen in the <code>ls -Z</code> example above: the output <code>unconfined_u</code> is a user role.</p>
-
 <h3 id="selinux-boolean">SELinux Boolean</h3>
-
 <p>An SELinux Boolean is a variable that can be toggled on and off without needing to reload or recompile an SELinux policy. You can view the list of boolean variables using the <code>getsebool -a</code> command. It&rsquo;s a long list, so you can pipe it through <code>grep</code> to narrow down the results:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~]# getsebool -a | grep xdm
+<pre><code>[root@centos ~]# getsebool -a | grep xdm
 xdm_bind_vnc_tcp_port --&gt; off
 xdm_exec_bootloader --&gt; off
 xdm_sysadm_login --&gt; off
-xdm_write_home --&gt; off</pre></div>
+xdm_write_home --&gt; off
+</code></pre>
 <p>You can change the value of any variable using the <code>setsebool</code> command. If you set the <code>-P</code> flag, the setting will persist through reboots. If you want to permit a service like <a href="https://guaris.github.io/docs/networking/vpn/tunnel-your-internet-traffic-through-an-openvpn-server/">openVPN</a> to run unconfined in your system, you have to edit the policies boolean variable:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~]# getsebool -a  | grep &#34;vpn&#34;
+<pre><code>[root@centos ~]# getsebool -a  | grep &quot;vpn&quot;
 openvpn_can_network_connect --&gt; on
 openvpn_enable_homedirs --&gt; on
 openvpn_run_unconfined --&gt; off
 
 [root@centos ~]# setsebool -P openvpn_run_unconfined ON
 
-[root@centos ~]# getsebool -a  | grep &#34;vpn&#34;
+[root@centos ~]# getsebool -a  | grep &quot;vpn&quot;
 openvpn_can_network_connect --&gt; on
 openvpn_enable_homedirs --&gt; on
-openvpn_run_unconfined --&gt; on</pre></div>
+openvpn_run_unconfined --&gt; on
+</code></pre>
 <p>Now, you are able to use OpenVPN <strong>unconfined</strong> or in <strong>permissive</strong> mode on your system, even if it is actively in <strong>enforcing</strong> mode. Set your system to <code>enforce</code>, and let SELinux protect your system.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[root@centos ~]# setenforce 1
+<pre><code>[root@centos ~]# setenforce 1
 [root@centos ~]# getenforce
-Enforcing</pre></div>
-<hr />
-
+Enforcing
+</code></pre>
+<hr>
 <p>Originally Published here: <a href="https://www.linode.com/docs/security/getting-started-with-selinux/">https://www.linode.com/docs/security/getting-started-with-selinux/</a></p>
 
   </article>
@@ -221,7 +217,7 @@ Enforcing</pre></div>
     
       <p>Angel Guarisma Portfolio</p>
     
-     © 2019
+     © 2020
     
        · 
       Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

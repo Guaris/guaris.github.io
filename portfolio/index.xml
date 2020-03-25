@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Angel Guarisma on </title>
@@ -10,6 +10,17 @@
     
 	<atom:link href="https://guaris.github.io/portfolio/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Installing MAAS and Configuring DHCP</title>
+      <link>https://guaris.github.io/portfolio/mass-dchp/</link>
+      <pubDate>Sat, 06 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://guaris.github.io/portfolio/mass-dchp/</guid>
+      <description>MAAS is a tool for provisioning baremetal servers in the cloud. The newest release of MAAS, 2.6.0, introduces a new way to configure DHCP. This tutorial will walk you through installing MAAS on Ubuntu 18.04, and configuring DHCP through the web interface.
+Installing MAAS Configuring Ubuntu   Update your system
+ sudo apt update &amp;amp;&amp;amp; sudo apt upgrade    Create a user, add the user to the sudo group, log in to the newly created user:</description>
+    </item>
     
     <item>
       <title>Introduction to SELinux</title>
